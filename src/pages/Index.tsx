@@ -40,7 +40,7 @@ const Index = () => {
               <span className="text-accent">Drive Smart.</span>
             </h1>
             <p className="text-lg md:text-xl text-secondary mb-8 max-w-2xl">
-              Discover premium new and used cars at Autoclass Motors. Experience excellence in automotive retail with our handpicked collection of luxury vehicles.
+              Buy and sell quality used cars with confidence at Autoclass Motors. Explore our carefully inspected vehicles and enjoy a trusted, hassle-free car trading experience.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/cars">
@@ -64,40 +64,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-muted">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="h-8 w-8 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Premium Selection</h3>
-              <p className="text-muted-foreground">
-                Handpicked collection of the finest new and pre-owned vehicles
-              </p>
-            </div>
-            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Trusted Service</h3>
-              <p className="text-muted-foreground">
-                Years of experience delivering exceptional customer satisfaction
-              </p>
-            </div>
-            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
-              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Best Deals</h3>
-              <p className="text-muted-foreground">
-                Competitive pricing with flexible financing options available
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Featured Cars Section */}
       <section className="py-20">
@@ -142,6 +109,41 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section className="py-20 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Premium Selection</h3>
+              <p className="text-muted-foreground">
+                Handpicked collection of the finest pre-owned vehicles, carefully inspected for quality and reliability
+              </p>
+            </div>
+            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Trusted Service</h3>
+              <p className="text-muted-foreground">
+                Years of experience in buying and selling cars with honesty, transparency, and customer satisfaction at heart
+              </p>
+            </div>
+            <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
+              <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Best Deals</h3>
+              <p className="text-muted-foreground">
+                Get the most competitive prices for your car — whether you’re buying or selling. Fair, fast, and hassle-free
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
@@ -149,21 +151,21 @@ const Index = () => {
             Ready to Find Your Dream Car?
           </h2>
           <p className="text-lg text-secondary mb-8 max-w-2xl mx-auto">
-            Visit our showroom or book a test drive today. Our expert team is ready to help you find the perfect vehicle.
+            Visit our showroom today to explore top-quality used cars.Find the perfect vehicle that matches your style, budget, and lifestyle — all under one roof at Autoclass Motors
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/contact">
+            <Link to="/cars">
               <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary-foreground text-lg px-8">
-                Book a Test Drive
+                View Cars for Sale
               </Button>
             </Link>
-            <Link to="/cars">
+            <Link to="/contact">
               <Button
                 size="lg"
                 variant="outline"
                 className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all text-lg px-8"
               >
-                Browse Inventory
+                Contact Us
               </Button>
 
 
