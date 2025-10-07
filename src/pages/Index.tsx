@@ -53,10 +53,11 @@ const Index = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-8 py-6"
+                  className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all text-lg px-8 py-6"
                 >
                   Contact Us
                 </Button>
+
               </Link>
             </div>
           </div>
@@ -160,10 +161,14 @@ const Index = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-8"
+                className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all text-lg px-8"
               >
                 Browse Inventory
               </Button>
+
+
+
+
             </Link>
           </div>
         </div>
