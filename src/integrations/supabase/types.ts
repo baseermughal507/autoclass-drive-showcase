@@ -14,16 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cars: {
+        Row: {
+          ad_reference: string | null
+          assembly: Database["public"]["Enums"]["assembly_type"] | null
+          body_type: Database["public"]["Enums"]["body_type"] | null
+          city: string | null
+          color: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          engine_capacity: string | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id: string
+          is_sold: boolean | null
+          main_image: string | null
+          mileage: string | null
+          price: number
+          province: string | null
+          short_description: string | null
+          title: string
+          transmission: Database["public"]["Enums"]["transmission_type"]
+          updated_at: string | null
+          year: number
+        }
+        Insert: {
+          ad_reference?: string | null
+          assembly?: Database["public"]["Enums"]["assembly_type"] | null
+          body_type?: Database["public"]["Enums"]["body_type"] | null
+          city?: string | null
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          engine_capacity?: string | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          is_sold?: boolean | null
+          main_image?: string | null
+          mileage?: string | null
+          price: number
+          province?: string | null
+          short_description?: string | null
+          title: string
+          transmission: Database["public"]["Enums"]["transmission_type"]
+          updated_at?: string | null
+          year: number
+        }
+        Update: {
+          ad_reference?: string | null
+          assembly?: Database["public"]["Enums"]["assembly_type"] | null
+          body_type?: Database["public"]["Enums"]["body_type"] | null
+          city?: string | null
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          engine_capacity?: string | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"]
+          id?: string
+          is_sold?: boolean | null
+          main_image?: string | null
+          mileage?: string | null
+          price?: number
+          province?: string | null
+          short_description?: string | null
+          title?: string
+          transmission?: Database["public"]["Enums"]["transmission_type"]
+          updated_at?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      assembly_type: "Local" | "Imported"
+      body_type:
+        | "Sedan"
+        | "Hatchback"
+        | "SUV"
+        | "Crossover"
+        | "Coupe"
+        | "Convertible"
+        | "Wagon"
+        | "Van"
+        | "Pickup"
+      fuel_type: "Petrol" | "Diesel" | "Hybrid" | "Electric" | "CNG" | "LPG"
+      transmission_type: "Automatic" | "Manual"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +261,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      assembly_type: ["Local", "Imported"],
+      body_type: [
+        "Sedan",
+        "Hatchback",
+        "SUV",
+        "Crossover",
+        "Coupe",
+        "Convertible",
+        "Wagon",
+        "Van",
+        "Pickup",
+      ],
+      fuel_type: ["Petrol", "Diesel", "Hybrid", "Electric", "CNG", "LPG"],
+      transmission_type: ["Automatic", "Manual"],
+    },
   },
 } as const
