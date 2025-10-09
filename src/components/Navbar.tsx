@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Car } from "lucide-react";
+import { Menu, X, Car, LogIn, LogOut, User, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,10 +29,13 @@ const Navbar = () => {
 
   const navLinks = [
     { path: "/", label: "Home" },
-    { path: "/cars", label: "Cars for Sale" },
     { path: "/about", label: "About Us" },
     { path: "/contact", label: "Contact" },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <nav
@@ -64,11 +78,44 @@ const Navbar = () => {
                 />
               </Link>
             ))}
-            <Link to="/contact">
-              <Button variant="default" className="bg-accent hover:bg-accent/90 text-primary-foreground">
-                Get in Touch
-              </Button>
-            </Link>
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <User className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+                    {user.email}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer">
+                          <LayoutDashboard className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" className="bg-accent hover:bg-accent/90 text-primary-foreground">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -97,12 +144,36 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <div className="px-4 pt-4">
-              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-primary-foreground">
-                  Get in Touch
-                </Button>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="block py-3 px-4 text-sm font-medium text-primary-foreground hover:text-accent hover:bg-accent/5 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Admin Dashboard
               </Link>
+            )}
+            <div className="px-4 pt-4">
+              {user ? (
+                <Button
+                  variant="default"
+                  className="w-full bg-accent hover:bg-accent/90 text-primary-foreground"
+                  onClick={() => {
+                    handleSignOut();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </Button>
+              ) : (
+                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="default" className="w-full bg-accent hover:bg-accent/90 text-primary-foreground">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         )}

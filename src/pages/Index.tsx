@@ -1,24 +1,36 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCars } from "@/lib/api";
+import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CarCard from "@/components/CarCard";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Shield, Award } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Car } from "@/types/database";
 
 const Index = () => {
   const { data: cars, isLoading } = useQuery({
     queryKey: ["cars"],
-    queryFn: fetchCars,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("cars")
+        .select("*")
+        .eq("is_sold", false)
+        .order("created_at", { ascending: false })
+        .limit(6);
+      
+      if (error) throw error;
+      return data as Car[];
+    },
   });
-
-  const featuredCars = cars?.slice(0, 6) || [];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <WhatsAppButton />
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -34,45 +46,36 @@ const Index = () => {
 
         <div className="relative z-10 container mx-auto px-4 text-center md:text-left">
           <div className="max-w-3xl animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
               Drive Luxury.
               <br />
               <span className="text-accent">Drive Smart.</span>
             </h1>
             <p className="text-lg md:text-xl text-secondary mb-8 max-w-2xl">
-              Buy and sell quality used cars with confidence at Autoclass Motors. Explore our carefully inspected vehicles and enjoy a trusted, hassle-free car trading experience.
+              Buy and sell quality used cars with confidence at Autoclass Motors.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/cars">
+              <Link to="/#cars">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary-foreground group text-lg px-8 py-6">
                   View Our Collection
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all text-lg px-8 py-6"
-                >
+                <Button size="lg" variant="outline" className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white text-lg px-8 py-6">
                   Contact Us
                 </Button>
-
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      
-
       {/* Featured Cars Section */}
-      <section className="py-20">
+      <section id="cars" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-              Featured Vehicles
-            </h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Vehicles</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Explore our latest arrivals and most popular cars
             </p>
@@ -81,31 +84,35 @@ const Index = () => {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="space-y-4">
-                  <Skeleton className="h-64 w-full rounded-lg" />
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+                <Skeleton key={i} className="h-96 w-full rounded-lg" />
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredCars.map((car) => (
-                <div key={car.id} className="animate-zoom-in">
-                  <CarCard car={car} />
-                </div>
+              {cars?.map((car) => (
+                <Link key={car.id} to={`/cars/${car.id}`}>
+                  <Card className="overflow-hidden hover:shadow-xl transition-shadow">
+                    <img src={car.main_image || 'https://via.placeholder.com/400x300'} alt={car.title} className="w-full h-48 object-cover" />
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-xl">{car.title}</h3>
+                        {car.is_sold && <Badge variant="secondary">Sold</Badge>}
+                      </div>
+                      <p className="text-2xl font-bold text-accent mb-2">Rs. {car.price.toLocaleString()}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-2">{car.short_description}</p>
+                      <div className="flex gap-4 mt-4 text-sm text-muted-foreground">
+                        <span>{car.year}</span>
+                        <span>•</span>
+                        <span>{car.transmission}</span>
+                        <span>•</span>
+                        <span>{car.fuel_type}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           )}
-
-          <div className="text-center mt-12">
-            <Link to="/cars">
-              <Button size="lg" variant="outline" className="border-2 group text-lg px-8">
-                View All Cars
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -118,60 +125,22 @@ const Index = () => {
                 <Star className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold mb-3">Premium Selection</h3>
-              <p className="text-muted-foreground">
-                Handpicked collection of the finest pre-owned vehicles, carefully inspected for quality and reliability
-              </p>
+              <p className="text-muted-foreground">Handpicked collection of finest pre-owned vehicles</p>
             </div>
             <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold mb-3">Trusted Service</h3>
-              <p className="text-muted-foreground">
-                Years of experience in buying and selling cars with honesty, transparency, and customer satisfaction at heart
-              </p>
+              <p className="text-muted-foreground">Years of experience with transparency and satisfaction</p>
             </div>
             <div className="text-center p-8 bg-card rounded-xl hover:shadow-lg transition-shadow">
               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Award className="h-8 w-8 text-accent" />
               </div>
               <h3 className="text-xl font-bold mb-3">Best Deals</h3>
-              <p className="text-muted-foreground">
-                Get the most competitive prices for your car — whether you’re buying or selling. Fair, fast, and hassle-free
-              </p>
+              <p className="text-muted-foreground">Competitive prices for buying or selling cars</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-            Ready to Find Your Dream Car?
-          </h2>
-          <p className="text-lg text-secondary mb-8 max-w-2xl mx-auto">
-            Visit our showroom today to explore top-quality used cars.Find the perfect vehicle that matches your style, budget, and lifestyle — all under one roof at Autoclass Motors
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/cars">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-primary-foreground text-lg px-8">
-                View Cars for Sale
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-black bg-white hover:bg-transparent hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all text-lg px-8"
-              >
-                Contact Us
-              </Button>
-
-
-
-
-            </Link>
           </div>
         </div>
       </section>
