@@ -1,31 +1,15 @@
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Shield, Award } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Car } from "@/types/database";
+import { cars } from "@/data/cars";
 
 const Index = () => {
-  const { data: cars, isLoading } = useQuery({
-    queryKey: ["cars"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("cars")
-        .select("*")
-        .eq("is_sold", false)
-        .order("created_at", { ascending: false })
-        .limit(6);
-      
-      if (error) throw error;
-      return data as Car[];
-    },
-  });
+  const availableCars = cars.filter(car => !car.is_sold).slice(0, 6);
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,38 +65,32 @@ const Index = () => {
             </p>
           </div>
 
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Skeleton key={i} className="h-96 w-full rounded-lg" />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cars?.map((car) => (
-                <Link key={car.id} to={`/cars/${car.id}`}>
-                  <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-                    <img src={car.main_image || 'https://via.placeholder.com/400x300'} alt={car.title} className="w-full h-48 object-cover" />
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-bold text-xl">{car.title}</h3>
-                        {car.is_sold && <Badge variant="secondary">Sold</Badge>}
-                      </div>
-                      <p className="text-2xl font-bold text-accent mb-2">Rs. {car.price.toLocaleString()}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2">{car.short_description}</p>
-                      <div className="flex gap-4 mt-4 text-sm text-muted-foreground">
-                        <span>{car.year}</span>
-                        <span>•</span>
-                        <span>{car.transmission}</span>
-                        <span>•</span>
-                        <span>{car.fuel_type}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {availableCars.map((car) => (
+              <Link key={car.id} to={`/cars/${car.id}`}>
+                <Card className="group overflow-hidden hover:shadow-xl transition-shadow relative">
+                  {car.is_sold && (
+                    <div className="absolute inset-0 bg-black/60 z-10 flex items-center justify-center">
+                      <Badge variant="destructive" className="text-2xl px-6 py-2">SOLD</Badge>
+                    </div>
+                  )}
+                  <img src={car.main_image} alt={car.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform" />
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-xl mb-2">{car.title}</h3>
+                    <p className="text-2xl font-bold text-accent mb-2">Rs. {car.price.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{car.short_description}</p>
+                    <div className="flex gap-4 text-sm text-muted-foreground">
+                      <span>{car.year}</span>
+                      <span>•</span>
+                      <span>{car.transmission}</span>
+                      <span>•</span>
+                      <span>{car.fuel_type}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
